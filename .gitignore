@@ -1,0 +1,14 @@
+.vs
+.vscode
+.DS_Store
+Library
+Logs
+Temp
+UserSettings
+obj
+*.csproj
+*.sln
+Assets/Smart-Inspector-0.8.0-pre.1
+Assets/Smart-Inspector-0.8.0-pre.1.meta
+Recordings
+BUILD
