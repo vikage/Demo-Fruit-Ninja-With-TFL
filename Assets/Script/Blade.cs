@@ -37,7 +37,7 @@ public class Blade : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
     }
-    void LateUpdate()
+    void Update()
     {
         if (swipeCutting)
         {
@@ -59,7 +59,8 @@ public class Blade : MonoBehaviour
 
     public void SetCuttingPosition(Vector2 position)
     {
-        StartCutting();
+        if (isCutting==false)
+            StartCutting();
         cuttingPosition = new Vector3(position.x,position.y, transform.position.z);
     }
     public void SetCuttingPosition(Vector3 position)

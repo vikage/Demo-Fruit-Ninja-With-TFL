@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TensorFlowLite;
+using System.Threading.Tasks;
+using System.Threading;
+using UnityEngine.Events;
 
 public class AppCameraDevice : MonoBehaviour
 {
-    [SerializeField, FilePopup("*.tflite")]
-    private string fileName = default;
+    [System.Serializable]
+    public class TextureUpdateEvent : UnityEvent<Texture> { }
 
     private bool camAvailable;
     private WebCamTexture camera;
@@ -17,12 +20,9 @@ public class AppCameraDevice : MonoBehaviour
     [SerializeField]
     private AspectRatioFitter fit;
 
-    private MoveNet moveNet;
-    private MoveNet.Result[] results;
-    private readonly Vector3[] rtCorners = new Vector3[4];
+    [SerializeField] private int requestFps = 60;
 
-    [SerializeField]
-    private Blade blade;
+    public TextureUpdateEvent OnTextureUpdate = new TextureUpdateEvent();
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class AppCameraDevice : MonoBehaviour
             if (cams[i].isFrontFacing)
             {
                 camName = cams[i].name;
-                camera = new WebCamTexture(camName, Screen.width, Screen.height);
+                camera = new WebCamTexture(camName, Screen.width, Screen.height, requestFps);
                 break;
             }
         }
@@ -56,12 +56,10 @@ public class AppCameraDevice : MonoBehaviour
         background.texture = camera;
 
         camAvailable = true;
-        moveNet = new MoveNet(fileName);
     }
 
-
     // Update is called once per frame
-    private void LateUpdate()
+    private void Update()
     {
         if (!camAvailable)
         {
@@ -76,41 +74,7 @@ public class AppCameraDevice : MonoBehaviour
         int orientation = -camera.videoRotationAngle;
         background.rectTransform.localEulerAngles = new Vector3(0, 0, orientation);
 
-        HandleMoveNet(background.texture);
+        OnTextureUpdate.Invoke(background.texture);
     }
 
-    private void HandleMoveNet(Texture texture)
-    {
-        moveNet.Invoke(texture);
-        results = moveNet.GetResults();
-        HandleResult(results);   
-    }
-
-    private void HandleResult(MoveNet.Result[] results)
-    {
-        if (results == null || results.Length == 0)
-        {
-            return;
-        }
-
-        var rect = background.GetComponent<RectTransform>();
-        rect.GetWorldCorners(rtCorners);
-        Vector3 min = rtCorners[0];
-        Vector3 max = rtCorners[2];
-
-        var connections = MoveNet.Connections;
-        int len = connections.GetLength(0);
-        var resultNose = results[(int)MoveNet.Part.NOSE];
-        Vector3 nosePositionFix = MathTF.Lerp(min, max, new Vector3(1-resultNose.x, 1f - resultNose.y, 0));
-        //Vector3 nosePosition = new Vector3(resultNose.x, resultNose.y, 0);
-        blade.SetCuttingPosition(new Vector2(nosePositionFix.x,nosePositionFix.y));
-        Debug.Log("Screen: (" + Screen.width + ", " + Screen.height + ")");
-        Debug.Log("Nose Position Fix: " + nosePositionFix);
-
-    }
-
-    private void OnDestroy()
-    {
-        moveNet?.Dispose();
-    }
 }

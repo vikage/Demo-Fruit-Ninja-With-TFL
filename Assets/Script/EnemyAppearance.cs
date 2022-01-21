@@ -20,7 +20,7 @@ public class EnemyAppearance : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
         if (needRotate)
             transform.Rotate(rotateDirection * Time.deltaTime * rotateSpeed);
