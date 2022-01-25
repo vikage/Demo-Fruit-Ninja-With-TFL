@@ -196,7 +196,7 @@ MonoBehaviour:
   appCameraDevice: {fileID: 241398295}
   threshold: 0.3
   blade: {fileID: 2065777242}
-  runBackground: 1
+  runBackground: 0
   usingPoseNet: 0
 --- !u!1 &242481023
 GameObject:
