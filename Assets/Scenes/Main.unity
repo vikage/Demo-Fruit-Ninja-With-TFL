@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 241398295}
   - component: {fileID: 241398296}
   m_Layer: 0
-  m_Name: PoseNet
+  m_Name: IndentifyController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,12 +190,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4142788a6edb7e34d8f335752f890359, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite
+  fileNamePoseNet: posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite
+  fileNameMoveNet: movenet_singlepose_lightning_int8.tflite
   cameraView: {fileID: 1403229091}
   appCameraDevice: {fileID: 241398295}
   threshold: 0.3
   blade: {fileID: 2065777242}
   runBackground: 1
+  usingPoseNet: 0
 --- !u!1 &242481023
 GameObject:
   m_ObjectHideFlags: 0

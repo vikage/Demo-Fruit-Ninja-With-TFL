@@ -73,7 +73,7 @@ namespace TensorFlowLite
         private readonly float[,] outputs0;
         public readonly Result[] results;
 
-        public MoveNet(string modelPath) : base(modelPath, false)
+        public MoveNet(string modelPath) : base(modelPath, true)
         {
             var odim0 = interpreter.GetOutputTensorInfo(0).shape;
 
@@ -96,6 +96,21 @@ namespace TensorFlowLite
             interpreter.GetOutputTensorData(0, outputs0);
         }
 
+        public async UniTask<Result[]> InvokeAsync(Texture inputTex, CancellationToken cancellationToken)
+        {
+            await ToTensorAsync(inputTex, input0, cancellationToken);
+            await UniTask.SwitchToThreadPool();
+
+            interpreter.SetInputTensorData(0, input0);
+            interpreter.Invoke();
+            interpreter.GetOutputTensorData(0, outputs0);
+
+            var results = GetResults();
+
+            await UniTask.SwitchToMainThread(cancellationToken);
+            return results;
+        }
+
         public Result[] GetResults()
         {
             for (int i = 0; i < results.Length; i++)
@@ -108,5 +123,8 @@ namespace TensorFlowLite
             }
             return results;
         }
+
+
+
     }
 }

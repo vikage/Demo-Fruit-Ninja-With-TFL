@@ -111,6 +111,13 @@ namespace TensorFlowLite
             return true;
         }
 
+        protected async UniTask<bool> ToTensorAsync(Texture inputTex, sbyte[,,] inputs, CancellationToken cancellationToken)
+        {
+            RenderTexture tex = resizer.Resize(inputTex, resizeOptions);
+            await tex2tensor.ToTensorAsync(tex, inputs);
+            return true;
+        }
+
         protected async UniTask<bool> ToTensorAsync(RenderTexture inputTex, float[,,] inputs, bool resize, CancellationToken cancellationToken)
         {
             RenderTexture tex = resize ? resizer.Resize(inputTex, resizeOptions) : inputTex;
