@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 732835650005174479}
   - component: {fileID: 3575604262699104651}
   - component: {fileID: 6033981194788008432}
+  - component: {fileID: 8593900159789700824}
   m_Layer: 0
   m_Name: ball_part_2
   m_TagString: Untagged
@@ -128,6 +129,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &8593900159789700824
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5296494631686764144}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8520116168920178513
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,6 +156,7 @@ GameObject:
   - component: {fileID: 7468775648064979845}
   - component: {fileID: 1469219423070230690}
   - component: {fileID: 6415289793536551693}
+  - component: {fileID: 3199866339741523943}
   m_Layer: 0
   m_Name: ball_part_1
   m_TagString: Untagged
@@ -209,3 +227,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &3199866339741523943
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8520116168920178513}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

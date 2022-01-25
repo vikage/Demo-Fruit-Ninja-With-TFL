@@ -42,10 +42,21 @@ public class IndentifyHandle : MonoBehaviour
     [SerializeField]
     private bool usingPoseNet = false;
 
+    [SerializeField]
+    private bool drawingBody = true;
     void Start()
     {
         rect = cameraView.GetComponent<RectTransform>();
         appCameraDevice.OnTextureUpdate.AddListener(OnTextureUpdate);
+        cancellationToken = this.GetCancellationTokenOnDestroy();
+
+        draw = new PrimitiveDraw(Camera.main, gameObject.layer)
+        {
+            color = Color.green,
+        };
+
+        if (blade.IsSwipeCutting())
+            return;
         if (usingPoseNet)
             poseNet = new PoseNet(fileNamePoseNet);
         else
@@ -55,11 +66,17 @@ public class IndentifyHandle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (blade.IsSwipeCutting())
+            return;
         HandleResult();
     }
 
     private void OnTextureUpdate(Texture texture)
     {
+        if (blade.IsSwipeCutting())
+        {
+            return;
+        }
         if (runBackground)
         {
             if (usingPoseNet)
@@ -144,6 +161,8 @@ public class IndentifyHandle : MonoBehaviour
             Vector3 nosePositionFix = MathTF.Lerp(min, max, new Vector3(1 - resultNose.x, 1f - resultNose.y, 0));
             blade.SetCuttingPosition(new Vector2(nosePositionFix.x, nosePositionFix.y));
         }
+
+        DrawResultMoveNet(resultsMoveNet, connections);
     }
 
     private void HandleResultPoseNet()
@@ -170,6 +189,37 @@ public class IndentifyHandle : MonoBehaviour
     {
         poseNet?.Dispose();
         moveNet?.Dispose();
+    }
+
+    private PrimitiveDraw draw;
+    private float lineThickness = 0.5f;
+
+    private void DrawResultMoveNet(MoveNet.Result[] results, MoveNet.Part[,] connections)
+    {
+        if (!drawingBody)
+        {
+            return;
+        }
+        rect.GetWorldCorners(rtCorners);
+        Vector3 min = rtCorners[0];
+        Vector3 max = rtCorners[2];
+
+        int len = connections.GetLength(0);
+        for (int i = 0; i < len; i++)
+        {
+            var a = results[(int)connections[i, 0]];
+            var b = results[(int)connections[i, 1]];
+            if (a.confidence >= threshold && b.confidence >= threshold)
+            {
+                draw.Line3D(
+                    MathTF.Lerp(min, max, new Vector3(1f- a.x,1f-a.y, blade.transform.position.z)),
+                    MathTF.Lerp(min, max, new Vector3(1f - b.x,1f-b.y, blade.transform.position.z)),
+                    lineThickness
+                );
+            }
+        }
+
+        draw.Apply();
     }
 
 }

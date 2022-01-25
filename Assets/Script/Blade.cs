@@ -29,6 +29,10 @@ public class Blade : MonoBehaviour
 
     private Vector3 cuttingPosition = new Vector3();
 
+    public bool IsSwipeCutting()
+    {
+        return swipeCutting;
+    }
     private void Start()
     {
         currentBladeEffect = Instantiate(effectPrefab, transform.position, transform.rotation);
